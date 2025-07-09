@@ -1,0 +1,64 @@
+# === Visual Studio ===
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# === Build results ===
+bin/
+obj/
+Debug/
+Release/
+
+# === ASP.NET Core ===
+appsettings.json
+appsettings.*.json
+
+# === Configuration secrets ===
+secrets.json
+
+# === Publish output ===
+*.publish/
+
+# === Rider (JetBrains) ===
+.idea/
+
+# === Logs ===
+*.log
+
+# === Others ===
+*.db
+*.DS_Store
+*.bak
+*.tmp
+*.cache
+*.swp
+*.orig
+
+# === Node / Frontend (si utilisé) ===
+node_modules/
+dist/
+.env
+.env.*
+
+# === Tests / Coverage ===
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.testresult
+
+# === Package management ===
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.assets.json
+
+# === Auto-generated ===
+Generated_Code/
+
+# === Git ===
+*.orig

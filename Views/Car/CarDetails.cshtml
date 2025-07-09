@@ -1,0 +1,32 @@
+﻿@model OC_p5_Express_Voitures.Models.Entities.Car
+
+@{
+    ViewData["Title"] = "Fiche voiture";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <a asp-action="IndexCarList" class="text-muted" style="text-decoration: none;">
+            ← Retour
+        </a>
+    </div>
+
+    <div class="row align-items-start">
+        <!-- Image -->
+        <div class="col-md-6 text-center">
+            <img src="~/cars/@Model.ImagePath"
+                 alt="@($"{Model.Brand?.Name} {Model.Model?.Name} {Model.Finishing?.Name}")"
+                 class="img-fluid rounded shadow"
+                 style="max-height: 500px; object-fit: cover;" />
+        </div>
+
+        <!-- Infos -->
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-4">Prix de vente</h3>
+            <p class="text-muted mb-2">Année : <span class="text-dark">@Model.Year</span></p>
+            <p class="text-muted mb-2">Marque : <span class="text-dark">@Model.Brand?.Name</span></p>
+            <p class="text-muted mb-2">Modèle : <span class="text-dark">@Model.Model?.Name</span></p>
+            <p class="text-muted mb-2">Finition : <span class="text-dark">@Model.Finishing?.Name</span></p>
+        </div>
+    </div>
+</div>

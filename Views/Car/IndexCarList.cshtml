@@ -1,0 +1,36 @@
+﻿@model IEnumerable<OC_p5_Express_Voitures.Models.Entities.Car>
+
+@{
+    ViewData["Title"] = "Nos voitures";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center my-5">
+    <h2 style="font-style: italic; color: #7b5b43;">Nos voitures</h2>
+    <a asp-action="IndexCreateCar" class="btn btn-warning mt-3">+ Ajouter une voiture</a>
+</div>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        @foreach (var car in Model)
+        {
+            <div class="col">
+                <a asp-action="CarDetails" asp-route-id="@car.Id" class="text-decoration-none text-dark">
+                <div class="card h-100 shadow-sm">
+                    <img src="~/cars/@car.ImagePath"
+                         class="card-img-top"
+                             alt="@($"{car.Brand?.Name} {car.Model?.Name} {car.Finishing?.Name}")"
+                         style="object-fit: cover; height: 200px;" />
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Prix de vente</h5>
+                        <p class="card-text mb-1">Année : @car.Year</p>
+                        <p class="card-text mb-1">Marque : @car.Brand?.Name</p>
+                        <p class="card-text mb-1">Modèle : @car.Model?.Name</p>
+                        <p class="card-text">Finition : @car.Finishing?.Name</p>
+                    </div>
+                </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

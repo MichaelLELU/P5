@@ -1,0 +1,186 @@
+﻿@model OC_p5_Express_Voitures.Models.Entities.Car
+
+@{
+    ViewData["Title"] = "Ajouter une voiture";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center mt-5">
+    <h2 style="font-style: italic; color: #7b5b43;">Ajouter une voiture</h2>
+    <p class="text-muted">Tous les champs sont obligatoires</p>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+    <div class="p-4 border border-primary rounded" style="max-width: 500px; width: 100%;">
+        <form asp-action="CreateCar" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="SalePrice" class="form-label">Prix de vente</label>
+                <input asp-for="SalePrice" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Year" class="form-label">Année</label>
+                <input asp-for="Year" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="IdBrand" class="form-label">Marque</label>
+                <select id="IdBrand" name="IdBrand" class="form-select">
+                    <option value="">Sélectionner une marque</option>
+                    @foreach (var brand in ViewBag.Brands as SelectList)
+                    {
+                        <option value="@brand.Value">@brand.Text</option>
+                    }
+                    <option value="__new__">+ Ajouter une nouvelle marque</option>
+                </select>
+            </div>
+
+            <div id="NewBrandContainer"></div>
+
+            <div class="mb-3">
+                <label for="IdModel" class="form-label">Modèle</label>
+                <select id="IdModel" name="IdModel" class="form-select" disabled>
+                    <option value="">Sélectionner un modèle</option>
+                    <option value="__new__">+ Ajouter un nouveau modèle</option>
+                </select>
+            </div>
+
+            <div id="NewModelContainer"></div>
+
+            <div class="mb-3">
+                <label for="IdFinishing" class="form-label">Finition</label>
+                <select id="IdFinishing" name="IdFinishing" class="form-select" disabled>
+                    <option value="">Sélectionner une finition</option>
+                    <option value="__new__">+ Ajouter une nouvelle finition</option>
+                </select>
+            </div>
+
+            <div id="NewFinishingContainer"></div>
+
+            <div class="mb-3">
+                <label asp-for="CodeVin" class="form-label">Code VIN</label>
+                <input asp-for="CodeVin" class="form-control" />
+                <span asp-validation-for="CodeVin" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Visuel</label>
+                <input type="file" name="imageFile" class="form-control" />
+            </div>
+      
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning px-4">Publier</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const IdBrand = document.getElementById("IdBrand");
+        const IdModel = document.getElementById("IdModel");
+        const IdFinishing = document.getElementById("IdFinishing");
+
+        function createInput(containerId, inputName, labelText) {
+            const container = document.getElementById(containerId);
+            if (!document.getElementsByName(inputName)[0]) {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label">${labelText}</label>
+                        <input type="text" name="${inputName}" class="form-control" required />
+                    </div>
+                `;
+            }
+        }
+
+        function toggleElementVisible(element, visible) {
+            element.style.display = visible ? "block" : "none";
+        }
+
+        function clearInput(containerId) {
+            document.getElementById(containerId).innerHTML = "";
+        }
+
+        // 👇 Marque sélectionnée
+        IdBrand.addEventListener("change", async function () {
+            const brandId = this.value;
+
+            // Reset modèle & finition
+            IdModel.innerHTML = '<option value="">Sélectionner un modèle</option><option value="__new__">+ Ajouter un nouveau modèle</option>';
+            IdModel.disabled = true;
+            toggleElementVisible(IdModel.parentElement, false);
+            clearInput("NewModelContainer");
+
+            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
+            IdFinishing.disabled = true;
+            toggleElementVisible(IdFinishing.parentElement, false);
+            clearInput("NewFinishingContainer");
+
+            // Nouvelle marque
+            if (brandId === "__new__") {
+                createInput("NewBrandContainer", "NewBrandName", "Nom de la nouvelle marque");
+                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                clearInput("NewBrandContainer");
+
+                // Afficher modèle et charger les modèles associés
+                toggleElementVisible(IdModel.parentElement, true);
+                IdModel.disabled = false;
+
+                const response = await fetch(`/Car/GetModelsByBrand?brandId=${brandId}`);
+                const models = await response.json();
+                models.forEach(model => {
+                    IdModel.innerHTML += `<option value="${model.id}">${model.name}</option>`;
+                });
+            }
+        });
+
+        // 👇 Modèle sélectionné
+        IdModel.addEventListener("change", async function () {
+            const modelId = this.value;
+
+            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
+            IdFinishing.disabled = true;
+            toggleElementVisible(IdFinishing.parentElement, false);
+            clearInput("NewFinishingContainer");
+
+            // Nouveau modèle
+            if (modelId === "__new__") {
+                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                clearInput("NewModelContainer");
+
+                // Afficher finition et charger les finitions associées
+                toggleElementVisible(IdFinishing.parentElement, true);
+                IdFinishing.disabled = false;
+
+                const response = await fetch(`/Car/GetFinishingsByModel?modelId=${modelId}`);
+                const finishings = await response.json();
+                finishings.forEach(fin => {
+                    IdFinishing.innerHTML += `<option value="${fin.id}">${fin.name}</option>`;
+                });
+            }
+        });
+
+        // 👇 Finition sélectionnée
+        IdFinishing.addEventListener("change", function () {
+            if (this.value === "__new__") {
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                clearInput("NewFinishingContainer");
+            }
+        });
+
+        // 👇 Init : masque modèle et finition au démarrage
+        toggleElementVisible(IdModel.parentElement, false);
+        toggleElementVisible(IdFinishing.parentElement, false);
+    </script>
+}
