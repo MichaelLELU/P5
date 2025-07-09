@@ -183,6 +183,15 @@ namespace OC_p5_Express_Voitures.Controllers
             return View(voiture);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCarConfirmed(int id)
+        {
+            await _carService.DeleteAsync(id);
+            return RedirectToAction(nameof(IndexCarList));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetModelsByBrand(int brandId)
         {

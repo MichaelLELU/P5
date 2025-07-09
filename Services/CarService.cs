@@ -43,6 +43,15 @@ namespace OC_p5_Express_Voitures.Services
             _context.Update(voiture);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteAsync(int id)
+        {
+            var car = await _context.Cars.FindAsync(id);
+            if (car != null)
+            {
+                _context.Cars.Remove(car);
+                await _context.SaveChangesAsync();
+            }
+        }
 
         public bool Exists(int id)
         {

@@ -22,6 +22,16 @@
 
         <!-- Infos -->
         <div class="col-md-6">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="mb-4">
+                    <span class="text-muted">Vous avez publié cette annonce, vous pouvez le :</span>
+                    <a asp-action="EditCar" asp-route-id="@Model.Id" class="ms-2">modifier</a> |
+                    <form asp-action="DeleteCarConfirmed" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-link text-danger p-0 ms-2" onclick="return confirm('Confirmer la suppression ?');">supprimer</button>
+                    </form>
+                </div>
+            }
             <h3 class="fw-bold mb-4">Prix de vente</h3>
             <p class="text-muted mb-2">Année : <span class="text-dark">@Model.Year</span></p>
             <p class="text-muted mb-2">Marque : <span class="text-dark">@Model.Brand?.Name</span></p>
