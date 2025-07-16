@@ -1,85 +1,180 @@
-﻿@model OC_p5_Express_Voitures.Models.Entities.Car
+@model OC_p5_Express_Voitures.Models.Entities.Car
 
 @{
-    ViewData["Title"] = "EditCar";
-    Layout = "~/Views/Car";
+    ViewData["Title"] = "Modifier une voiture";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>EditCar</h1>
+<div class="text-center mt-5">
+    <h2 style="font-style: italic; color: #7b5b43;">Modifier une voiture</h2>
+</div>
 
-<h4>Car</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditCar">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="d-flex justify-content-center mt-4">
+    <div class="p-4 border border-primary rounded" style="max-width: 500px; width: 100%;">
+        <form asp-action="EditCar" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CodeVin" class="control-label"></label>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="SalePrice" class="form-label">Prix de vente</label>
+                <input asp-for="SalePrice" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Year" class="form-label">Année</label>
+                <input asp-for="Year" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="IdBrand" class="form-label">Marque</label>
+                <select id="IdBrand" name="IdBrand" class="form-select">
+                    <option value="">Sélectionner une marque</option>
+                    @foreach (var brand in ViewBag.Brands as SelectList)
+                    {
+                        var isSelected = brand.Value == Model.IdBrand?.ToString() ? "selected" : "";
+                        @:<option value="@brand.Value" @isSelected>@brand.Text</option>
+                    }
+                    <option value="__new__">+ Ajouter une nouvelle marque</option>
+                </select>
+            </div>
+
+            <div id="NewBrandContainer"></div>
+
+            <div class="mb-3">
+                <label for="IdModel" class="form-label">Modèle</label>
+                <select id="IdModel" name="IdModel" class="form-select">
+                    <option value="">Sélectionner un modèle</option>
+                    <option value="__new__">+ Ajouter un nouveau modèle</option>
+                </select>
+            </div>
+
+            <div id="NewModelContainer"></div>
+
+            <div class="mb-3">
+                <label for="IdFinishing" class="form-label">Finition</label>
+                <select id="IdFinishing" name="IdFinishing" class="form-select">
+                    <option value="">Sélectionner une finition</option>
+                    <option value="__new__">+ Ajouter une nouvelle finition</option>
+                </select>
+            </div>
+
+            <div id="NewFinishingContainer"></div>
+
+            <div class="mb-3">
+                <label asp-for="CodeVin" class="form-label">Code VIN</label>
                 <input asp-for="CodeVin" class="form-control" />
                 <span asp-validation-for="CodeVin" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="ImagePath" class="form-label">Visuel actuel</label><br />
+                <img src="~/cars/@Model.ImagePath" alt="Voiture" class="img-thumbnail" style="max-height: 200px;" />
             </div>
-            <div class="form-group">
-                <label asp-for="IdBrand" class="control-label"></label>
-                <select asp-for="IdBrand" class="form-control" asp-items="ViewBag.IdBrand"></select>
-                <span asp-validation-for="IdBrand" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label class="form-label">Changer le visuel</label>
+                <input type="file" name="imageFile" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="IdModel" class="control-label"></label>
-                <select asp-for="IdModel" class="form-control" asp-items="ViewBag.IdModel"></select>
-                <span asp-validation-for="IdModel" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdFinishing" class="control-label"></label>
-                <select asp-for="IdFinishing" class="form-control" asp-items="ViewBag.IdFinishing"></select>
-                <span asp-validation-for="IdFinishing" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvailabilityDate" class="control-label"></label>
-                <input asp-for="AvailabilityDate" class="form-control" />
-                <span asp-validation-for="AvailabilityDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
-                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasePrice" class="control-label"></label>
-                <input asp-for="PurchasePrice" class="form-control" />
-                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" />
-                <span asp-validation-for="SaleDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SalePrice" class="control-label"></label>
-                <input asp-for="SalePrice" class="form-control" />
-                <span asp-validation-for="SalePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning px-4">Enregistrer</button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const IdBrand = document.getElementById("IdBrand");
+        const IdModel = document.getElementById("IdModel");
+        const IdFinishing = document.getElementById("IdFinishing");
+
+        const selectedModelId = "@Model.IdModel";
+        const selectedFinishingId = "@Model.IdFinishing";
+
+        function createInput(containerId, inputName, labelText) {
+            const container = document.getElementById(containerId);
+            if (!document.getElementsByName(inputName)[0]) {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label">${labelText}</label>
+                        <input type="text" name="${inputName}" class="form-control" required />
+                    </div>
+                `;
+            }
+        }
+
+        function clearInput(containerId) {
+            document.getElementById(containerId).innerHTML = "";
+        }
+
+        IdBrand.addEventListener("change", async function () {
+            const brandId = this.value;
+
+            IdModel.innerHTML = '<option value="">Sélectionner un modèle</option><option value="__new__">+ Ajouter un nouveau modèle</option>';
+            IdModel.disabled = true;
+            clearInput("NewModelContainer");
+
+            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
+            IdFinishing.disabled = true;
+            clearInput("NewFinishingContainer");
+
+            if (brandId === "__new__") {
+                createInput("NewBrandContainer", "NewBrandName", "Nom de la nouvelle marque");
+                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                clearInput("NewBrandContainer");
+
+                const res = await fetch(`/Car/GetModelsByBrand?brandId=${brandId}`);
+                const models = await res.json();
+
+                models.forEach(model => {
+                    const selected = model.id == selectedModelId ? "selected" : "";
+                    IdModel.innerHTML += `<option value="${model.id}" ${selected}>${model.name}</option>`;
+                });
+
+                IdModel.disabled = false;
+                IdModel.dispatchEvent(new Event("change")); // pour charger les finitions si déjà sélectionné
+            }
+        });
+
+        IdModel.addEventListener("change", async function () {
+            const modelId = this.value;
+            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
+            IdFinishing.disabled = true;
+            clearInput("NewModelContainer");
+            clearInput("NewFinishingContainer");
+
+            if (modelId === "__new__") {
+                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                const res = await fetch(`/Car/GetFinishingsByModel?modelId=${modelId}`);
+                const finishings = await res.json();
+
+                finishings.forEach(f => {
+                    const selected = f.id == selectedFinishingId ? "selected" : "";
+                    IdFinishing.innerHTML += `<option value="${f.id}" ${selected}>${f.name}</option>`;
+                });
+
+                IdFinishing.disabled = false;
+            }
+        });
+
+        IdFinishing.addEventListener("change", function () {
+            if (this.value === "__new__") {
+                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
+            } else {
+                clearInput("NewFinishingContainer");
+            }
+        });
+
+        // 👇 Initialisation au chargement
+        window.addEventListener("load", () => {
+            if (IdBrand.value && IdBrand.value !== "__new__") {
+                IdBrand.dispatchEvent(new Event("change"));
+            }
+        });
+    </script>
 }

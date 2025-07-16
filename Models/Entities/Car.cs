@@ -8,7 +8,7 @@ namespace OC_p5_Express_Voitures.Models.Entities
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "code VIN unique obligatoire")]
         [StringLength(17)]
         public string CodeVin { get; set; }
 

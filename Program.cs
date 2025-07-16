@@ -23,7 +23,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// ----- Services personnalisés -----
+// ----- Services personnalisï¿½s -----
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IReparationService, ReparationService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -34,7 +34,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ----- Seeding des données + admin -----
+// ----- Seeding des donnï¿½es + admin -----
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -42,7 +42,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-    await DbSeeder.SeedAsync(context); // seed données
+    await DbSeeder.SeedAsync(context); // seed donnï¿½es
     await DbSeeder.SeedAdminUserAsync(roleManager, userManager); // seed admin
 }
 

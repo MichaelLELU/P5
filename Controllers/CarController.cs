@@ -57,7 +57,7 @@ namespace OC_p5_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCar(Car voiture, IFormFile? imageFile)
         {
-            // Nettoyer les "__new__"
+            
             if (Request.Form["IdBrand"] == "__new__") voiture.IdBrand = null;
             if (Request.Form["IdModel"] == "__new__") voiture.IdModel = null;
             if (Request.Form["IdFinishing"] == "__new__") voiture.IdFinishing = null;
@@ -66,7 +66,7 @@ namespace OC_p5_Express_Voitures.Controllers
             string newModelName = Request.Form["NewModelName"];
             string newFinishingName = Request.Form["NewFinishingName"];
 
-            // 1. Créer si nécessaire
+           
             if (!string.IsNullOrWhiteSpace(newBrandName))
             {
                 var brand = await _brandService.CreateIfNotExistsAsync(newBrandName);
@@ -85,17 +85,15 @@ namespace OC_p5_Express_Voitures.Controllers
                 voiture.IdFinishing = finishing.Id;
             }
 
-            // 2. Effacer les erreurs précédentes liées à ces champs
             ModelState.Remove(nameof(Car.IdBrand));
             ModelState.Remove(nameof(Car.IdModel));
             ModelState.Remove(nameof(Car.IdFinishing));
 
-            // 3. Revalider le modèle après mise à jour
             TryValidateModel(voiture);
 
             if (ModelState.IsValid)
             {
-                // 4. Enregistrer l’image si fournie
+
                 if (imageFile != null && imageFile.Length > 0)
                 {
                     var fileName = Path.GetFileName(imageFile.FileName);
@@ -109,7 +107,6 @@ namespace OC_p5_Express_Voitures.Controllers
                     voiture.ImagePath = fileName;
                 }
 
-                // 5. Enregistrer la voiture
                 await _carService.CreateAsync(voiture);
                 return RedirectToAction("Confirmation");
             }
@@ -142,7 +139,6 @@ namespace OC_p5_Express_Voitures.Controllers
 
         // GET: Edit Car
         [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCar(int? id)
         {
             if (id == null) return NotFound();
@@ -158,30 +154,78 @@ namespace OC_p5_Express_Voitures.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCar(int id, Car voiture)
+        public async Task<IActionResult> EditCar(int id, Car voiture, IFormFile? imageFile)
         {
-            if (id != voiture.Id) return NotFound();
+            if (id != voiture.Id)
+                return NotFound();
 
-            if (ModelState.IsValid)
+            // Gestion des valeurs spéciales "__new__"
+            if (Request.Form["IdBrand"] == "__new__") voiture.IdBrand = null;
+            if (Request.Form["IdModel"] == "__new__") voiture.IdModel = null;
+            if (Request.Form["IdFinishing"] == "__new__") voiture.IdFinishing = null;
+
+            string newBrandName = Request.Form["NewBrandName"];
+            string newModelName = Request.Form["NewModelName"];
+            string newFinishingName = Request.Form["NewFinishingName"];
+
+            // Création dynamique si nécessaire
+            if (!string.IsNullOrWhiteSpace(newBrandName))
             {
-                try
-                {
-                    await _carService.UpdateAsync(voiture);
-                }
-                catch
-                {
-                    if (!_carService.Exists(id)) return NotFound();
-                    throw;
-                }
-
-                return RedirectToAction(nameof(IndexCarList));
+                var brand = await _brandService.CreateIfNotExistsAsync(newBrandName);
+                voiture.IdBrand = brand.Id;
             }
 
+            if (!string.IsNullOrWhiteSpace(newModelName))
+            {
+                var model = await _modelService.CreateIfNotExistsAsync(newModelName, voiture.IdBrand ?? 0);
+                voiture.IdModel = model.Id;
+            }
 
-            await RemplirViewBags();
+            if (!string.IsNullOrWhiteSpace(newFinishingName))
+            {
+                var finishing = await _finishingService.CreateIfNotExistsAsync(newFinishingName, voiture.IdModel ?? 0);
+                voiture.IdFinishing = finishing.Id;
+            }
 
-            return View(voiture);
+            // Suppression des anciennes erreurs de validation (lié aux champs mis à jour)
+            ModelState.Remove(nameof(Car.IdBrand));
+            ModelState.Remove(nameof(Car.IdModel));
+            ModelState.Remove(nameof(Car.IdFinishing));
+            TryValidateModel(voiture);
+
+            if (!ModelState.IsValid)
+            {
+                await RemplirViewBags();
+                return View(voiture);
+            }
+
+            // Gestion de l’image si nouvelle image fournie
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var fileName = Path.GetFileName(imageFile.FileName);
+                var filePath = Path.Combine("wwwroot/cars/", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+
+                voiture.ImagePath = fileName;
+            }
+
+            try
+            {
+                await _carService.UpdateAsync(voiture);
+            }
+            catch
+            {
+                if (!_carService.Exists(id)) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(IndexCarList));
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
