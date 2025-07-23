@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Voiture supprimée";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center mt-5">
+    <h2 style="font-style: italic; color: #7b5b43;">
+        @ViewBag.Year @ViewBag.Brand @ViewBag.Model
+    </h2>
+    <p class="text-muted">a bien été supprimée</p>
+
+    <div class="mt-4">
+        <a asp-action="IndexCarList" class="btn btn-warning">Retour à l'accueil</a>
+    </div>
+</div>

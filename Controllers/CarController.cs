@@ -42,6 +42,22 @@ namespace OC_p5_Express_Voitures.Controllers
             return View(voiture);
         }
 
+        public IActionResult DeletedConfirmation()
+        {
+            if (TempData["DeletedCarYear"] == null ||
+                TempData["DeletedCarBrand"] == null ||
+                TempData["DeletedCarModel"] == null)
+            {
+                return RedirectToAction(nameof(IndexCarList));
+            }
+
+            ViewBag.Year = TempData["DeletedCarYear"];
+            ViewBag.Brand = TempData["DeletedCarBrand"];
+            ViewBag.Model = TempData["DeletedCarModel"];
+
+            return View();
+        }
+
         // GET: Create Car
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexCreateCar()
@@ -232,9 +248,21 @@ namespace OC_p5_Express_Voitures.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCarConfirmed(int id)
         {
+            var car = await _carService.GetByIdAsync(id);
+            if (car == null)
+                return NotFound();
+
             await _carService.DeleteAsync(id);
-            return RedirectToAction(nameof(IndexCarList));
+
+            TempData["DeletedCarYear"] = car.Year;
+            TempData["DeletedCarBrand"] = car.Brand?.Name; 
+            TempData["DeletedCarModel"] = car.Model?.Name;
+
+            return RedirectToAction(nameof(DeletedConfirmation));
         }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetModelsByBrand(int brandId)

@@ -36,7 +36,24 @@ namespace OC_p5_Express_Voitures.Data
 
         public static async Task SeedAsync(ApplicationDbContext context)
         {
-            await context.Database.MigrateAsync(); // garde les migrations
+            await context.Database.MigrateAsync(); 
+
+            var imagesDir = Path.Combine("wwwroot", "cars");
+            var seedDir = Path.Combine(imagesDir, "seed");
+
+            if (Directory.Exists(imagesDir))
+            {
+ 
+                var filesToDelete = Directory
+                    .GetFiles(imagesDir, "*", SearchOption.TopDirectoryOnly) 
+                    .ToList();
+
+                foreach (var file in filesToDelete)
+                {
+                    File.Delete(file);
+                }
+            }
+
 
             // Supprime les données existantes
             context.Cars.RemoveRange(context.Cars);
@@ -47,8 +64,8 @@ namespace OC_p5_Express_Voitures.Data
             await context.SaveChangesAsync();
 
 
-                // 1. Brands
-                var brand1 = new Brand { Name = "Toyota" };
+            // 1. Brands
+            var brand1 = new Brand { Name = "Toyota" };
                 var brand2 = new Brand { Name = "Peugeot" };
                 context.Brands.AddRange(brand1, brand2);
                 await context.SaveChangesAsync();
@@ -91,7 +108,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish1,
                 PurchasePrice = 18000,
                 AvailabilityDate = DateTime.Now.AddDays(30),
-                Reparations = new List<Reparation> { repar1, repar2 }
+                Reparations = new List<Reparation> { repar1, repar2 },
+                ImagePath = "seed/corolla-base-v3.png"
             },
             new Car
             {
@@ -102,7 +120,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish2,
                 PurchasePrice = 19000,
                 AvailabilityDate = DateTime.Now.AddDays(25),
-                Reparations = new List<Reparation> { repar3 }
+                Reparations = new List<Reparation> { repar3 },
+                ImagePath = "seed/corolla-premium.png"
             },
             new Car
             {
@@ -113,7 +132,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish3,
                 PurchasePrice = 17000,
                 AvailabilityDate = DateTime.Now.AddDays(15),
-                Reparations = new List<Reparation> { repar4 }
+                Reparations = new List<Reparation> { repar4 },
+                ImagePath = "seed/toyota-yaris-sport.jpg"
             },
             new Car
             {
@@ -124,7 +144,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish4,
                 PurchasePrice = 21000,
                 AvailabilityDate = DateTime.Now.AddDays(10),
-                Reparations = new List<Reparation> { repar1, repar3 }
+                Reparations = new List<Reparation> { repar1, repar3 },
+                ImagePath = "seed/peugeot-208-active.jpg"
             },
             new Car
             {
@@ -135,7 +156,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish5,
                 PurchasePrice = 23000,
                 AvailabilityDate = DateTime.Now.AddDays(5),
-                Reparations = new List<Reparation> { repar2 }
+                Reparations = new List<Reparation> { repar2 },
+                ImagePath = "seed/peugeot-308-gt.jpg"
             },
             new Car
             {
@@ -146,7 +168,8 @@ namespace OC_p5_Express_Voitures.Data
                 Finishing = finish6,
                 PurchasePrice = 25000,
                 AvailabilityDate = DateTime.Now.AddDays(2),
-                Reparations = new List<Reparation> { repar4 }
+                Reparations = new List<Reparation> { repar4 },
+                ImagePath = "seed/peugeot-308-allure.jpeg"
             }
         };
 
