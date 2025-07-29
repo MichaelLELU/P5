@@ -6,18 +6,41 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("IndexCarList", "Car")">
-                <button type="submit" class="btn btn-link p-0 text-dark" style="text-decoration: none;">Se déconnecter</button>
+            <form class="form-inline m-0 p-0" asp-area="Identity" asp-page="/Account/Logout" 
+                  asp-route-returnUrl="@Url.Action("IndexCarList", "Car")" aria-label="Formulaire de déconnexion">
+                <button type="submit" 
+                        class="btn btn-link p-0 text-dark"
+                        style="text-decoration: none;"
+                        aria-label="Se déconnecter de votre compte">
+                    Se déconnecter
+                </button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="btn btn-warning btn-sm" asp-area="Identity" asp-page="/Account/Login">Se connecter</a>
+            <a class="btn btn-warning btn-sm"
+               asp-area="Identity"
+               asp-page="/Account/Login"
+               aria-label="Se connecter à votre compte">
+                Se connecter
+            </a>
         </li>
         <li class="nav-item">
-            <a class="btn btn-outline-warning btn-sm" asp-area="Identity" asp-page="/Account/Register">S’inscrire</a>
+            <a class="btn btn-outline-warning btn-sm"
+               asp-area="Identity"
+               asp-page="/Account/Register"
+               aria-label="Créer un compte">
+                S’inscrire
+            </a>
         </li>
     }
 </ul>
+
+<style>
+    .btn:focus {
+        outline: 2px solid #B99056;
+        outline-offset: 2px;
+    }
+</style>

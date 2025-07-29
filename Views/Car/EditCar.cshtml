@@ -6,23 +6,26 @@
 }
 
 <div class="text-center mt-5">
-    <h2 style="font-style: italic; color: #7b5b43;">Modifier une voiture</h2>
+    <h2 id="editCarTitle" style="font-style: italic; color: #7b5b43;">Modifier une voiture</h2>
 </div>
 
-<div class="d-flex justify-content-center mt-4">
+<div class="d-flex justify-content-center mt-4" role="form" aria-labelledby="editCarTitle">
     <div class="p-4 border border-primary rounded" style="max-width: 500px; width: 100%;">
         <form asp-action="EditCar" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" aria-live="assertive"></div>
 
             <div class="mb-3">
                 <label asp-for="SalePrice" class="form-label">Prix de vente</label>
-                <input asp-for="SalePrice" class="form-control" />
+                <input asp-for="SalePrice" class="form-control" aria-describedby="priceHelp" />
+                <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Année</label>
-                <input asp-for="Year" class="form-control" />
+                <input asp-for="Year" class="form-control" aria-describedby="yearHelp" />
+                <small id="yearHelp" class="form-text text-muted">Année de mise en circulation.</small>
             </div>
 
             <div class="mb-3">
@@ -38,7 +41,7 @@
                 </select>
             </div>
 
-            <div id="NewBrandContainer"></div>
+            <div id="NewBrandContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label for="IdModel" class="form-label">Modèle</label>
@@ -48,7 +51,7 @@
                 </select>
             </div>
 
-            <div id="NewModelContainer"></div>
+            <div id="NewModelContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label for="IdFinishing" class="form-label">Finition</label>
@@ -58,123 +61,40 @@
                 </select>
             </div>
 
-            <div id="NewFinishingContainer"></div>
+            <div id="NewFinishingContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                <input asp-for="CodeVin" class="form-control" />
+                <input asp-for="CodeVin" class="form-control" aria-describedby="vinHelp" />
+                <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small>
                 <span asp-validation-for="CodeVin" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="ImagePath" class="form-label">Visuel actuel</label><br />
-                <img src="~/cars/@Model.ImagePath" alt="Voiture" class="img-thumbnail" style="max-height: 200px;" />
+                <img src="~/cars/@Model.ImagePath" 
+                     alt="Visuel de @Model.Brand?.Name @Model.Model?.Name @Model.Finishing?.Name" 
+                     class="img-thumbnail" style="max-height: 200px;" />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Changer le visuel</label>
-                <input type="file" name="imageFile" class="form-control" />
+                <input type="file" name="imageFile" class="form-control" aria-label="Téléverser une nouvelle image du véhicule" />
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-warning px-4">Enregistrer</button>
+                <button type="submit" class="btn btn-warning px-4" aria-label="Enregistrer les modifications de la voiture">
+                    Enregistrer
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        const IdBrand = document.getElementById("IdBrand");
-        const IdModel = document.getElementById("IdModel");
-        const IdFinishing = document.getElementById("IdFinishing");
-
-        const selectedModelId = "@Model.IdModel";
-        const selectedFinishingId = "@Model.IdFinishing";
-
-        function createInput(containerId, inputName, labelText) {
-            const container = document.getElementById(containerId);
-            if (!document.getElementsByName(inputName)[0]) {
-                container.innerHTML = `
-                    <div class="mb-3">
-                        <label class="form-label">${labelText}</label>
-                        <input type="text" name="${inputName}" class="form-control" required />
-                    </div>
-                `;
-            }
-        }
-
-        function clearInput(containerId) {
-            document.getElementById(containerId).innerHTML = "";
-        }
-
-        IdBrand.addEventListener("change", async function () {
-            const brandId = this.value;
-
-            IdModel.innerHTML = '<option value="">Sélectionner un modèle</option><option value="__new__">+ Ajouter un nouveau modèle</option>';
-            IdModel.disabled = true;
-            clearInput("NewModelContainer");
-
-            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
-            IdFinishing.disabled = true;
-            clearInput("NewFinishingContainer");
-
-            if (brandId === "__new__") {
-                createInput("NewBrandContainer", "NewBrandName", "Nom de la nouvelle marque");
-                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
-                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
-            } else {
-                clearInput("NewBrandContainer");
-
-                const res = await fetch(`/Car/GetModelsByBrand?brandId=${brandId}`);
-                const models = await res.json();
-
-                models.forEach(model => {
-                    const selected = model.id == selectedModelId ? "selected" : "";
-                    IdModel.innerHTML += `<option value="${model.id}" ${selected}>${model.name}</option>`;
-                });
-
-                IdModel.disabled = false;
-                IdModel.dispatchEvent(new Event("change")); // pour charger les finitions si déjà sélectionné
-            }
-        });
-
-        IdModel.addEventListener("change", async function () {
-            const modelId = this.value;
-            IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option><option value="__new__">+ Ajouter une nouvelle finition</option>';
-            IdFinishing.disabled = true;
-            clearInput("NewModelContainer");
-            clearInput("NewFinishingContainer");
-
-            if (modelId === "__new__") {
-                createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
-                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
-            } else {
-                const res = await fetch(`/Car/GetFinishingsByModel?modelId=${modelId}`);
-                const finishings = await res.json();
-
-                finishings.forEach(f => {
-                    const selected = f.id == selectedFinishingId ? "selected" : "";
-                    IdFinishing.innerHTML += `<option value="${f.id}" ${selected}>${f.name}</option>`;
-                });
-
-                IdFinishing.disabled = false;
-            }
-        });
-
-        IdFinishing.addEventListener("change", function () {
-            if (this.value === "__new__") {
-                createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
-            } else {
-                clearInput("NewFinishingContainer");
-            }
-        });
-
-        // 👇 Initialisation au chargement
-        window.addEventListener("load", () => {
-            if (IdBrand.value && IdBrand.value !== "__new__") {
-                IdBrand.dispatchEvent(new Event("change"));
-            }
-        });
-    </script>
-}
+<style>
+    input:focus, select:focus, button:focus {
+        outline: 2px solid #B99056;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+</style>

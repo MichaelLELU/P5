@@ -6,31 +6,44 @@
 }
 
 <div class="text-center my-5">
-    <h2 style="font-style: italic; color: #7b5b43;">Nos voitures</h2>
-    <a asp-action="IndexCreateCar" class="btn btn-warning mt-3">+ Ajouter une voiture</a>
+    <h2 id="carsTitle" style="font-style: italic; color: #7b5b43;">Nos voitures</h2>
+    <a asp-action="IndexCreateCar" class="btn btn-warning mt-3" aria-label="Ajouter une nouvelle voiture">
+        + Ajouter une voiture
+    </a>
 </div>
 
-<div class="container">
+<div class="container" role="region" aria-labelledby="carsTitle">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         @foreach (var car in Model)
         {
+            var carLabel = $"{car.Brand?.Name} {car.Model?.Name} {car.Finishing?.Name}".Trim();
             <div class="col">
-                <a asp-action="CarDetails" asp-route-id="@car.Id" class="text-decoration-none text-dark">
-                <div class="card h-100 shadow-sm">
-                    <img src="~/cars/@car.ImagePath"
-                         class="card-img-top"
-                             alt="@($"{car.Brand?.Name} {car.Model?.Name} {car.Finishing?.Name}")"
-                         style="object-fit: cover; height: 200px;" />
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Prix de vente</h5>
-                        <p class="card-text mb-1">Année : @car.Year</p>
-                        <p class="card-text mb-1">Marque : @car.Brand?.Name</p>
-                        <p class="card-text mb-1">Modèle : @car.Model?.Name</p>
-                        <p class="card-text">Finition : @car.Finishing?.Name</p>
+                <a asp-action="CarDetails" asp-route-id="@car.Id"
+                   class="text-decoration-none text-dark"
+                   aria-label="Voir les détails de @(string.IsNullOrWhiteSpace(carLabel) ? "cette voiture" : carLabel)">
+                    <div class="card h-100 shadow-sm">
+                        <img src="~/cars/@car.ImagePath"
+                             class="card-img-top"
+                             alt="@(string.IsNullOrWhiteSpace(carLabel) ? "Image de la voiture" : carLabel)"
+                             style="object-fit: cover; height: 200px;" />
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Prix de vente</h5>
+                            <p class="card-text mb-1">Année : @car.Year</p>
+                            <p class="card-text mb-1">Marque : @car.Brand?.Name</p>
+                            <p class="card-text mb-1">Modèle : @car.Model?.Name</p>
+                            <p class="card-text">Finition : @car.Finishing?.Name</p>
+                        </div>
                     </div>
-                </div>
                 </a>
             </div>
         }
     </div>
 </div>
+
+<style>
+    a:focus .card {
+        outline: 3px solid #B99056;
+        outline-offset: 4px;
+        border-radius: 8px;
+    }
+</style>

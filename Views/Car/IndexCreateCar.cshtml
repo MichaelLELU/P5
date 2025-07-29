@@ -6,28 +6,30 @@
 }
 
 <div class="text-center mt-5">
-    <h2 style="font-style: italic; color: #7b5b43;">Ajouter une voiture</h2>
+    <h2 id="createCarTitle" style="font-style: italic; color: #7b5b43;">Ajouter une voiture</h2>
     <p class="text-muted">Tous les champs sont obligatoires</p>
 </div>
 
-<div class="d-flex justify-content-center mt-4">
+<div class="d-flex justify-content-center mt-4" role="form" aria-labelledby="createCarTitle">
     <div class="p-4 border border-primary rounded" style="max-width: 500px; width: 100%;">
         <form asp-action="CreateCar" enctype="multipart/form-data" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" aria-live="assertive"></div>
 
             <div class="mb-3">
                 <label asp-for="SalePrice" class="form-label">Prix de vente</label>
-                <input asp-for="SalePrice" class="form-control" />
+                <input asp-for="SalePrice" class="form-control" aria-describedby="priceHelp" />
+                <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Année</label>
-                <input asp-for="Year" class="form-control" />
+                <input asp-for="Year" class="form-control" aria-describedby="yearHelp" />
+                <small id="yearHelp" class="form-text text-muted">Année de mise en circulation.</small>
             </div>
 
             <div class="mb-3">
                 <label for="IdBrand" class="form-label">Marque</label>
-                <select id="IdBrand" name="IdBrand" class="form-select">
+                <select id="IdBrand" name="IdBrand" class="form-select" aria-describedby="brandHelp">
                     <option value="">Sélectionner une marque</option>
                     @foreach (var brand in ViewBag.Brands as SelectList)
                     {
@@ -35,47 +37,62 @@
                     }
                     <option value="__new__">+ Ajouter une nouvelle marque</option>
                 </select>
+                <small id="brandHelp" class="form-text text-muted">Sélectionnez une marque ou ajoutez-en une nouvelle.</small>
             </div>
 
-            <div id="NewBrandContainer"></div>
+            <div id="NewBrandContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label for="IdModel" class="form-label">Modèle</label>
-                <select id="IdModel" name="IdModel" class="form-select" disabled>
+                <select id="IdModel" name="IdModel" class="form-select" disabled aria-describedby="modelHelp">
                     <option value="">Sélectionner un modèle</option>
                     <option value="__new__">+ Ajouter un nouveau modèle</option>
                 </select>
+                <small id="modelHelp" class="form-text text-muted">Sélectionnez un modèle ou ajoutez-en un nouveau.</small>
             </div>
 
-            <div id="NewModelContainer"></div>
+            <div id="NewModelContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label for="IdFinishing" class="form-label">Finition</label>
-                <select id="IdFinishing" name="IdFinishing" class="form-select" disabled>
+                <select id="IdFinishing" name="IdFinishing" class="form-select" disabled aria-describedby="finishingHelp">
                     <option value="">Sélectionner une finition</option>
                     <option value="__new__">+ Ajouter une nouvelle finition</option>
                 </select>
+                <small id="finishingHelp" class="form-text text-muted">Sélectionnez une finition ou ajoutez-en une nouvelle.</small>
             </div>
 
-            <div id="NewFinishingContainer"></div>
+            <div id="NewFinishingContainer" aria-live="polite"></div>
 
             <div class="mb-3">
                 <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                <input asp-for="CodeVin" class="form-control" />
+                <input asp-for="CodeVin" class="form-control" aria-describedby="vinHelp" />
+                <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small>
                 <span asp-validation-for="CodeVin" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Visuel</label>
-                <input type="file" name="imageFile" class="form-control" />
+                <input type="file" name="imageFile" class="form-control" aria-label="Sélectionner l'image de la voiture" />
             </div>
-      
+
             <div class="text-center">
-                <button type="submit" class="btn btn-warning px-4">Publier</button>
+                <button type="submit" class="btn btn-warning px-4" aria-label="Publier cette voiture">
+                    Publier
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+<style>
+    input:focus, select:focus, button:focus {
+        outline: 2px solid #B99056;
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+</style>
+
 
 @section Scripts {
     @{
