@@ -107,6 +107,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model1,
                 Finishing = finish1,
                 PurchasePrice = 18000,
+                SalePrice = 20000,
                 AvailabilityDate = DateTime.Now.AddDays(30),
                 Reparations = new List<Reparation> { repar1, repar2 },
                 ImagePath = "seed/corolla-base-v3.png"
@@ -119,6 +120,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model1,
                 Finishing = finish2,
                 PurchasePrice = 19000,
+                SalePrice = 20000,
                 AvailabilityDate = DateTime.Now.AddDays(25),
                 Reparations = new List<Reparation> { repar3 },
                 ImagePath = "seed/corolla-premium.png"
@@ -131,6 +133,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model2,
                 Finishing = finish3,
                 PurchasePrice = 17000,
+                SalePrice = 20000,
                 AvailabilityDate = DateTime.Now.AddDays(15),
                 Reparations = new List<Reparation> { repar4 },
                 ImagePath = "seed/toyota-yaris-sport.jpg"
@@ -143,6 +146,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model3,
                 Finishing = finish4,
                 PurchasePrice = 21000,
+                SalePrice = 30000,
                 AvailabilityDate = DateTime.Now.AddDays(10),
                 Reparations = new List<Reparation> { repar1, repar3 },
                 ImagePath = "seed/peugeot-208-active.jpg"
@@ -155,6 +159,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model4,
                 Finishing = finish5,
                 PurchasePrice = 23000,
+                SalePrice = 30000,
                 AvailabilityDate = DateTime.Now.AddDays(5),
                 Reparations = new List<Reparation> { repar2 },
                 ImagePath = "seed/peugeot-308-gt.jpg"
@@ -167,6 +172,7 @@ namespace OC_p5_Express_Voitures.Data
                 Model = model4,
                 Finishing = finish6,
                 PurchasePrice = 25000,
+                SalePrice = 30000,
                 AvailabilityDate = DateTime.Now.AddDays(2),
                 Reparations = new List<Reparation> { repar4 },
                 ImagePath = "seed/peugeot-308-allure.jpeg"

@@ -14,20 +14,34 @@
         <form asp-action="EditCar" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
 
+            <!-- Résumé des erreurs -->
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" aria-live="assertive"></div>
 
+            <!-- Prix de vente -->
             <div class="mb-3">
                 <label asp-for="SalePrice" class="form-label">Prix de vente</label>
                 <input asp-for="SalePrice" class="form-control" aria-describedby="priceHelp" />
                 <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small>
+                <span asp-validation-for="SalePrice" class="text-danger" aria-live="polite"></span>
             </div>
 
+            <!-- Année -->
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Année</label>
                 <input asp-for="Year" class="form-control" aria-describedby="yearHelp" />
                 <small id="yearHelp" class="form-text text-muted">Année de mise en circulation.</small>
+                <span asp-validation-for="Year" class="text-danger" aria-live="polite"></span>
             </div>
 
+            <!-- Prix d'achat -->
+            <div class="mb-3">
+                <label asp-for="PurchasePrice" class="form-label">Prix d'achat</label>
+                <input asp-for="PurchasePrice" class="form-control" aria-describedby="purchaseHelp" />
+                <small id="purchaseHelp" class="form-text text-muted">Entrez le prix d'achat en euros.</small>
+                <span asp-validation-for="PurchasePrice" class="text-danger" aria-live="polite"></span>
+            </div>
+
+            <!-- Marque -->
             <div class="mb-3">
                 <label for="IdBrand" class="form-label">Marque</label>
                 <select id="IdBrand" name="IdBrand" class="form-select">
@@ -37,39 +51,37 @@
                         var isSelected = brand.Value == Model.IdBrand?.ToString() ? "selected" : "";
                         @:<option value="@brand.Value" @isSelected>@brand.Text</option>
                     }
-                    <option value="__new__">+ Ajouter une nouvelle marque</option>
                 </select>
+                <span asp-validation-for="IdBrand" class="text-danger" aria-live="polite"></span>
             </div>
 
-            <div id="NewBrandContainer" aria-live="polite"></div>
-
+            <!-- Modèle -->
             <div class="mb-3">
                 <label for="IdModel" class="form-label">Modèle</label>
                 <select id="IdModel" name="IdModel" class="form-select">
                     <option value="">Sélectionner un modèle</option>
-                    <option value="__new__">+ Ajouter un nouveau modèle</option>
                 </select>
+                <span asp-validation-for="IdModel" class="text-danger" aria-live="polite"></span>
             </div>
 
-            <div id="NewModelContainer" aria-live="polite"></div>
-
+            <!-- Finition -->
             <div class="mb-3">
                 <label for="IdFinishing" class="form-label">Finition</label>
                 <select id="IdFinishing" name="IdFinishing" class="form-select">
                     <option value="">Sélectionner une finition</option>
-                    <option value="__new__">+ Ajouter une nouvelle finition</option>
                 </select>
+                <span asp-validation-for="IdFinishing" class="text-danger" aria-live="polite"></span>
             </div>
 
-            <div id="NewFinishingContainer" aria-live="polite"></div>
-
+            <!-- Code VIN -->
             <div class="mb-3">
                 <label asp-for="CodeVin" class="form-label">Code VIN</label>
                 <input asp-for="CodeVin" class="form-control" aria-describedby="vinHelp" />
                 <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small>
-                <span asp-validation-for="CodeVin" class="text-danger"></span>
+                <span asp-validation-for="CodeVin" class="text-danger" aria-live="polite"></span>
             </div>
 
+            <!-- Visuel -->
             <div class="mb-3">
                 <label asp-for="ImagePath" class="form-label">Visuel actuel</label><br />
                 <img src="~/cars/@Model.ImagePath" 
@@ -82,6 +94,7 @@
                 <input type="file" name="imageFile" class="form-control" aria-label="Téléverser une nouvelle image du véhicule" />
             </div>
 
+            <!-- Bouton -->
             <div class="text-center">
                 <button type="submit" class="btn btn-warning px-4" aria-label="Enregistrer les modifications de la voiture">
                     Enregistrer
@@ -98,3 +111,65 @@
         border-radius: 4px;
     }
 </style>
+
+@section Scripts {
+<script>
+    const IdBrand = document.getElementById("IdBrand");
+    const IdModel = document.getElementById("IdModel");
+    const IdFinishing = document.getElementById("IdFinishing");
+
+    const selectedModelId = "@Model.IdModel";
+    const selectedFinishingId = "@Model.IdFinishing";
+
+    // Changement de marque
+    IdBrand.addEventListener("change", async function () {
+        const brandId = this.value;
+
+        IdModel.innerHTML = '<option value="">Sélectionner un modèle</option>';
+        IdModel.disabled = true;
+
+        IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option>';
+        IdFinishing.disabled = true;
+
+        if (brandId) {
+            const res = await fetch(`/Car/GetModelsByBrand?brandId=${brandId}`);
+            const models = await res.json();
+
+            models.forEach(m => {
+                const selected = m.id == selectedModelId ? "selected" : "";
+                IdModel.innerHTML += `<option value="${m.id}" ${selected}>${m.name}</option>`;
+            });
+
+            IdModel.disabled = false;
+            IdModel.dispatchEvent(new Event("change"));
+        }
+    });
+
+    // Changement de modèle
+    IdModel.addEventListener("change", async function () {
+        const modelId = this.value;
+
+        IdFinishing.innerHTML = '<option value="">Sélectionner une finition</option>';
+        IdFinishing.disabled = true;
+
+        if (modelId) {
+            const res = await fetch(`/Car/GetFinishingsByModel?modelId=${modelId}`);
+            const finishings = await res.json();
+
+            finishings.forEach(f => {
+                const selected = f.id == selectedFinishingId ? "selected" : "";
+                IdFinishing.innerHTML += `<option value="${f.id}" ${selected}>${f.name}</option>`;
+            });
+
+            IdFinishing.disabled = false;
+        }
+    });
+
+    // Initialisation au chargement
+    window.addEventListener("load", () => {
+        if (IdBrand.value) {
+            IdBrand.dispatchEvent(new Event("change"));
+        }
+    });
+</script>
+}
