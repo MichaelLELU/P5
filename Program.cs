@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using OC_p5_Express_Voitures.Data;
 using OC_p5_Express_Voitures.Services;
 using OC_p5_Express_Voitures.Services.Interfaces;
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("TestProjectCarExpress")]
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +60,7 @@ else
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -71,3 +75,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+public partial class Program { }
