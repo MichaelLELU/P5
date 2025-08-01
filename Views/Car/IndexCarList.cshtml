@@ -7,9 +7,12 @@
 
 <div class="text-center my-5">
     <h2 id="carsTitle" style="font-style: italic; color: #7b5b43;">Nos voitures</h2>
-    <a asp-action="IndexCreateCar" class="btn btn-warning mt-3" aria-label="Ajouter une nouvelle voiture">
-        + Ajouter une voiture
-    </a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action="IndexCreateCar" class="btn btn-warning mt-3" aria-label="Ajouter une nouvelle voiture">
+            + Ajouter une voiture
+        </a>
+    }
 </div>
 
 <div class="container" role="region" aria-labelledby="carsTitle">

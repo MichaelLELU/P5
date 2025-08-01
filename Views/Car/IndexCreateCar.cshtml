@@ -20,7 +20,7 @@
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Année</label>
                 <input asp-for="Year" class="form-control" aria-describedby="yearHelp" />
-                <small id="yearHelp" class="form-text text-muted">Année de mise en circulation.</small>
+                <small id="yearHelp" class="form-text text-muted">Année de mise en circulation.</small> <br/>
                 <span asp-validation-for="Year" class="text-danger" aria-live="polite"></span>
             </div>
 
@@ -34,7 +34,7 @@
                     }
                     <option value="__new__">+ Ajouter une nouvelle marque</option>
                 </select>
-                <small id="brandHelp" class="form-text text-muted">Sélectionnez une marque ou ajoutez-en une nouvelle.</small>
+                <small id="brandHelp" class="form-text text-muted">Sélectionnez une marque ou ajoutez-en une nouvelle.</small><br />
                 <span asp-validation-for="IdBrand" class="text-danger" aria-live="polite"></span>
             </div>
 
@@ -46,7 +46,7 @@
                     <option value="">Sélectionner un modèle</option>
                     <option value="__new__">+ Ajouter un nouveau modèle</option>
                 </select>
-                <small id="modelHelp" class="form-text text-muted">Sélectionnez un modèle ou ajoutez-en un nouveau.</small>
+                <small id="modelHelp" class="form-text text-muted">Sélectionnez un modèle ou ajoutez-en un nouveau.</small><br />
                 <span asp-validation-for="IdModel" class="text-danger" aria-live="polite"></span>
             </div>
 
@@ -58,7 +58,7 @@
                     <option value="">Sélectionner une finition</option>
                     <option value="__new__">+ Ajouter une nouvelle finition</option>
                 </select>
-                <small id="finishingHelp" class="form-text text-muted">Sélectionnez une finition ou ajoutez-en une nouvelle.</small>
+                <small id="finishingHelp" class="form-text text-muted">Sélectionnez une finition ou ajoutez-en une nouvelle.</small><br />
                 <span asp-validation-for="IdFinishing" class="text-danger" aria-live="polite"></span>
             </div>
 
@@ -67,21 +67,21 @@
             <div class="mb-3">
                 <label asp-for="CodeVin" class="form-label">Code VIN</label>
                 <input asp-for="CodeVin" class="form-control" aria-describedby="vinHelp" />
-                <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small>
+                <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small><br />
                 <span asp-validation-for="CodeVin" class="text-danger" aria-live="polite"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="SalePrice" class="form-label">Prix de vente</label>
                 <input asp-for="SalePrice" class="form-control" aria-describedby="priceHelp" />
-                <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small>
+                <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small><br />
                 <span asp-validation-for="SalePrice" class="text-danger" aria-live="polite"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="PurchasePrice" class="form-label">Prix d'achat</label>
                 <input asp-for="PurchasePrice" class="form-control" aria-describedby="purchaseHelp" />
-                <small id="purchaseHelp" class="form-text text-muted">Entrez le prix d'achat en euros.</small>
+                <small id="purchaseHelp" class="form-text text-muted">Entrez le prix d'achat en euros.</small><br />
                 <span asp-validation-for="PurchasePrice" class="text-danger" aria-live="polite"></span>
             </div>
 
