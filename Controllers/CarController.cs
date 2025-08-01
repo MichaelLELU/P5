@@ -127,7 +127,6 @@ namespace OC_p5_Express_Voitures.Controllers
                 return RedirectToAction("Confirmation");
             }
 
-            // Debug ModelState
             foreach (var entry in ModelState)
             {
                 if (entry.Value.Errors.Count > 0)
@@ -203,7 +202,7 @@ namespace OC_p5_Express_Voitures.Controllers
                 voiture.IdFinishing = finishing.Id;
             }
 
-            // Suppression des anciennes erreurs de validation (lié aux champs mis à jour)
+
             ModelState.Remove(nameof(Car.IdBrand));
             ModelState.Remove(nameof(Car.IdModel));
             ModelState.Remove(nameof(Car.IdFinishing));
@@ -215,7 +214,6 @@ namespace OC_p5_Express_Voitures.Controllers
                 return View(voiture);
             }
 
-            // Gestion de l’image si nouvelle image fournie
             if (imageFile != null && imageFile.Length > 0)
             {
                 var fileName = Path.GetFileName(imageFile.FileName);

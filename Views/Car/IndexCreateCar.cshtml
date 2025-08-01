@@ -14,10 +14,9 @@
     <div class="p-4 border border-primary rounded" style="max-width: 500px; width: 100%;">
         <form asp-action="CreateCar" enctype="multipart/form-data" method="post">
 
-            <!-- Résumé des erreurs -->
+
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" aria-live="assertive"></div>
 
-            <!-- Année -->
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Année</label>
                 <input asp-for="Year" class="form-control" aria-describedby="yearHelp" />
@@ -25,7 +24,6 @@
                 <span asp-validation-for="Year" class="text-danger" aria-live="polite"></span>
             </div>
 
-            <!-- Marque -->
             <div class="mb-3">
                 <label for="IdBrand" class="form-label">Marque</label>
                 <select id="IdBrand" name="IdBrand" class="form-select" aria-describedby="brandHelp">
@@ -42,7 +40,6 @@
 
             <div id="NewBrandContainer" aria-live="polite"></div>
 
-            <!-- Modèle -->
             <div class="mb-3">
                 <label for="IdModel" class="form-label">Modèle</label>
                 <select id="IdModel" name="IdModel" class="form-select" disabled aria-describedby="modelHelp">
@@ -55,7 +52,6 @@
 
             <div id="NewModelContainer" aria-live="polite"></div>
 
-            <!-- Finition -->
             <div class="mb-3">
                 <label for="IdFinishing" class="form-label">Finition</label>
                 <select id="IdFinishing" name="IdFinishing" class="form-select" disabled aria-describedby="finishingHelp">
@@ -68,23 +64,20 @@
 
             <div id="NewFinishingContainer" aria-live="polite"></div>
 
-            <!-- Code VIN -->
             <div class="mb-3">
                 <label asp-for="CodeVin" class="form-label">Code VIN</label>
                 <input asp-for="CodeVin" class="form-control" aria-describedby="vinHelp" />
                 <small id="vinHelp" class="form-text text-muted">17 caractères alphanumériques du véhicule.</small>
                 <span asp-validation-for="CodeVin" class="text-danger" aria-live="polite"></span>
             </div>
-            
-            <!-- Prix de vente -->
+
             <div class="mb-3">
                 <label asp-for="SalePrice" class="form-label">Prix de vente</label>
                 <input asp-for="SalePrice" class="form-control" aria-describedby="priceHelp" />
                 <small id="priceHelp" class="form-text text-muted">Entrez le prix en euros.</small>
                 <span asp-validation-for="SalePrice" class="text-danger" aria-live="polite"></span>
             </div>
-            
-            <!-- Prix d'achat -->
+
             <div class="mb-3">
                 <label asp-for="PurchasePrice" class="form-label">Prix d'achat</label>
                 <input asp-for="PurchasePrice" class="form-control" aria-describedby="purchaseHelp" />
@@ -92,13 +85,11 @@
                 <span asp-validation-for="PurchasePrice" class="text-danger" aria-live="polite"></span>
             </div>
 
-            <!-- Image -->
             <div class="mb-3">
                 <label class="form-label">Visuel</label>
                 <input type="file" name="imageFile" class="form-control" aria-label="Sélectionner l'image de la voiture" />
             </div>
 
-            <!-- Bouton -->
             <div class="text-center">
                 <button type="submit" class="btn btn-warning px-4" aria-label="Publier cette voiture">
                     Publier
@@ -148,11 +139,9 @@
             document.getElementById(containerId).innerHTML = "";
         }
 
-        // 👇 Marque sélectionnée
         IdBrand.addEventListener("change", async function () {
             const brandId = this.value;
 
-            // Reset modèle & finition
             IdModel.innerHTML = '<option value="">Sélectionner un modèle</option><option value="__new__">+ Ajouter un nouveau modèle</option>';
             IdModel.disabled = true;
             toggleElementVisible(IdModel.parentElement, false);
@@ -163,7 +152,6 @@
             toggleElementVisible(IdFinishing.parentElement, false);
             clearInput("NewFinishingContainer");
 
-            // Nouvelle marque
             if (brandId === "__new__") {
                 createInput("NewBrandContainer", "NewBrandName", "Nom de la nouvelle marque");
                 createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
@@ -171,7 +159,6 @@
             } else {
                 clearInput("NewBrandContainer");
 
-                // Afficher modèle et charger les modèles associés
                 toggleElementVisible(IdModel.parentElement, true);
                 IdModel.disabled = false;
 
@@ -183,7 +170,6 @@
             }
         });
 
-        // 👇 Modèle sélectionné
         IdModel.addEventListener("change", async function () {
             const modelId = this.value;
 
@@ -192,14 +178,12 @@
             toggleElementVisible(IdFinishing.parentElement, false);
             clearInput("NewFinishingContainer");
 
-            // Nouveau modèle
             if (modelId === "__new__") {
                 createInput("NewModelContainer", "NewModelName", "Nom du nouveau modèle");
                 createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
             } else {
                 clearInput("NewModelContainer");
 
-                // Afficher finition et charger les finitions associées
                 toggleElementVisible(IdFinishing.parentElement, true);
                 IdFinishing.disabled = false;
 
@@ -211,7 +195,6 @@
             }
         });
 
-        // 👇 Finition sélectionnée
         IdFinishing.addEventListener("change", function () {
             if (this.value === "__new__") {
                 createInput("NewFinishingContainer", "NewFinishingName", "Nom de la nouvelle finition");
@@ -220,7 +203,6 @@
             }
         });
 
-        // 👇 Init : masque modèle et finition au démarrage
         toggleElementVisible(IdModel.parentElement, false);
         toggleElementVisible(IdFinishing.parentElement, false);
     </script>

@@ -17,7 +17,7 @@ namespace OC_p5_Express_Voitures.Data
         {
         }
 
-        // ✅ Ta méthode est bien à l'intérieur de la classe ici
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
